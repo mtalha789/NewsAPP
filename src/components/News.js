@@ -32,32 +32,42 @@ export class News extends Component {
     return word.charAt(0).toUpperCase()+word.slice(1)
   }
   updatenews=async()=>{
-    this.props.setprogress(10)
-    this.setState({loading:true})
-    let url =
-      `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apikey}&page=${this.state.page}&pageSize=${this.props.pageSize}`;
-    let data = await fetch(url);
-    this.props.setprogress(30)
-    let parseddata = await data.json();
-    this.props.setprogress(70)
-    this.setState({
-      loading:false,
-       articles: parseddata.articles,
-       totalResults: parseddata.totalResults 
-     });
-     this.props.setprogress(100)
-  }
-  fetchData=async ()=>{
-    let url =
-      `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apikey}&page=${this.state.page+1}&pageSize=${this.props.pageSize}`;
-      this.setState({page:this.state.page+1})
+    try {
+      this.props.setprogress(10)
+      this.setState({loading:true})
+      let url =
+        `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apikey}&page=${this.state.page}&pageSize=${this.props.pageSize}`;
       let data = await fetch(url);
-    let parseddata = await data.json();
-    this.setState({
-      loading:false,
-       articles: this.state.articles.concat(parseddata.articles),
-       totalResults: parseddata.totalResults 
-     });
+      this.props.setprogress(30)
+      let parseddata = await data.json();
+      this.props.setprogress(70)
+      this.setState({
+        loading:false,
+         articles: parseddata.articles,
+         totalResults: parseddata.totalResults 
+       });
+       this.props.setprogress(100)
+    
+    } catch (error) {
+      
+    }
+  }
+
+  fetchData=async ()=>{
+    try {
+      let url =
+        `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apikey}&page=${this.state.page+1}&pageSize=${this.props.pageSize}`;
+        this.setState({page:this.state.page+1})
+        let data = await fetch(url);
+      let parseddata = await data.json();
+      this.setState({
+        loading:false,
+         articles: this.state.articles.concat(parseddata.articles),
+         totalResults: parseddata.totalResults 
+       });
+    } catch (error) {
+      
+    }
   }
   
   
@@ -70,9 +80,9 @@ export class News extends Component {
       <>
         <h1 className="text-center">Top Headlines from {this.capitalize(this.props.category)} Category</h1>
         <InfiniteScroll
-  dataLength={this.state.articles.length} //This is important field to render the next data
+  dataLength={this.state.articles?.length} //This is important field to render the next data
   next={this.fetchData}
-  hasMore={this.state.articles.length!==this.state.totalResults}
+  hasMore={this.state.articles?.length!==this.state.totalResults}
   loader={<Loader/>}
   >
     <div className="container">
