@@ -88,7 +88,7 @@ export class News extends Component {
     <div className="container">
         {this.state.loading && <Loader/>}
         <div className="row">
-          {!this.state.loading && this.state.articles.map((element) => {
+          {!this.state.loading && this.state.articles?.map((element) => {
             return (
               <div className="col-md-4 my-3" key={this.props.key}>
                 <Newsitem
